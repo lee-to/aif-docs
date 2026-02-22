@@ -53,11 +53,18 @@ const optionalTools = [
     <template #init-title="{ item }">
       <div class="space-y-1">
         <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-        <p class="text-base text-muted">{{ item.description }}</p>
+        <p class="text-base text-muted">
+          {{ item.description }}
+        </p>
       </div>
     </template>
     <template #init-description>
-      <UBadge color="neutral" variant="subtle" size="lg" class="font-mono">
+      <UBadge
+        color="neutral"
+        variant="subtle"
+        size="lg"
+        class="font-mono"
+      >
         ai-factory init
       </UBadge>
     </template>
@@ -65,16 +72,28 @@ const optionalTools = [
     <template #setup-title="{ item }">
       <div class="space-y-1">
         <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-        <p class="text-base text-muted">{{ item.description }}</p>
+        <p class="text-base text-muted">
+          {{ item.description }}
+        </p>
       </div>
     </template>
     <template #setup-description>
       <div class="space-y-2">
-        <UBadge color="primary" variant="subtle" size="lg" class="font-mono">
+        <UBadge
+          color="primary"
+          variant="subtle"
+          size="lg"
+          class="font-mono"
+        >
           /aif
         </UBadge>
         <ul class="list-disc ps-5 text-sm text-muted space-y-1 mt-3">
-          <li v-for="file in setupFiles" :key="file">{{ file }}</li>
+          <li
+            v-for="file in setupFiles"
+            :key="file"
+          >
+            {{ file }}
+          </li>
         </ul>
       </div>
     </template>
@@ -82,12 +101,19 @@ const optionalTools = [
     <template #arch-title="{ item }">
       <div class="space-y-1">
         <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-        <p class="text-base text-muted">{{ item.description }}</p>
+        <p class="text-base text-muted">
+          {{ item.description }}
+        </p>
       </div>
     </template>
     <template #arch-description>
       <div class="space-y-2">
-        <UBadge color="primary" variant="subtle" size="lg" class="font-mono">
+        <UBadge
+          color="primary"
+          variant="subtle"
+          size="lg"
+          class="font-mono"
+        >
           /aif-architecture
         </UBadge>
         <p class="text-sm text-muted mt-2">
@@ -99,7 +125,9 @@ const optionalTools = [
     <template #optional-title="{ item }">
       <div class="space-y-1">
         <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-        <p class="text-base text-muted">{{ item.description }}</p>
+        <p class="text-base text-muted">
+          {{ item.description }}
+        </p>
       </div>
     </template>
     <template #optional-description>

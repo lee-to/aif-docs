@@ -13,7 +13,7 @@ const isFolder = (item: TreeItem) =>
 
 const normalizeLabel = (label: string) => label.replace(/\/$/, '').toLowerCase()
 
-const sortTree = (items: TreeItem[]) => {
+const sortTree = (items: TreeItem[]): TreeItem[] => {
   const sorted = [...items].sort((a, b) => {
     const aFolder = isFolder(a)
     const bFolder = isFolder(b)
@@ -23,7 +23,7 @@ const sortTree = (items: TreeItem[]) => {
     return normalizeLabel(a.label).localeCompare(normalizeLabel(b.label))
   })
 
-  return sorted.map((item) => ({
+  return sorted.map((item): TreeItem => ({
     ...item,
     children: item.children ? sortTree(item.children) : undefined
   }))

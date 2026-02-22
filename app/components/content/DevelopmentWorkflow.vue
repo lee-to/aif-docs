@@ -65,7 +65,13 @@ const fixFlow = [
       <template #plan-title="{ item }">
         <div class="flex items-center gap-3">
           <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-          <UBadge color="neutral" variant="subtle" size="sm">{{ item.badge }}</UBadge>
+          <UBadge
+            color="neutral"
+            variant="subtle"
+            size="sm"
+          >
+            {{ item.badge }}
+          </UBadge>
         </div>
       </template>
       <template #plan-description>
@@ -89,7 +95,13 @@ const fixFlow = [
       <template #improve-title="{ item }">
         <div class="flex items-center gap-3">
           <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-          <UBadge color="neutral" variant="subtle" size="sm">{{ item.badge }}</UBadge>
+          <UBadge
+            color="neutral"
+            variant="subtle"
+            size="sm"
+          >
+            {{ item.badge }}
+          </UBadge>
         </div>
       </template>
       <template #improve-description>
@@ -104,7 +116,13 @@ const fixFlow = [
       <template #implement-title="{ item }">
         <div class="flex items-center gap-3">
           <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-          <UBadge color="primary" variant="subtle" size="sm">{{ item.badge }}</UBadge>
+          <UBadge
+            color="primary"
+            variant="subtle"
+            size="sm"
+          >
+            {{ item.badge }}
+          </UBadge>
         </div>
       </template>
       <template #implement-description>
@@ -127,7 +145,13 @@ const fixFlow = [
       <template #verify-title="{ item }">
         <div class="flex items-center gap-3">
           <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-          <UBadge color="neutral" variant="subtle" size="sm">{{ item.badge }}</UBadge>
+          <UBadge
+            color="neutral"
+            variant="subtle"
+            size="sm"
+          >
+            {{ item.badge }}
+          </UBadge>
         </div>
       </template>
       <template #verify-description>
@@ -142,7 +166,13 @@ const fixFlow = [
       <template #commit-title="{ item }">
         <div class="flex items-center gap-3">
           <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-          <UBadge color="primary" variant="subtle" size="sm">{{ item.badge }}</UBadge>
+          <UBadge
+            color="primary"
+            variant="subtle"
+            size="sm"
+          >
+            {{ item.badge }}
+          </UBadge>
         </div>
       </template>
       <template #commit-description>
@@ -157,7 +187,13 @@ const fixFlow = [
       <template #evolve-title="{ item }">
         <div class="flex items-center gap-3">
           <span class="text-xl font-semibold text-primary">{{ item.title }}</span>
-          <UBadge color="neutral" variant="subtle" size="sm">{{ item.badge }}</UBadge>
+          <UBadge
+            color="neutral"
+            variant="subtle"
+            size="sm"
+          >
+            {{ item.badge }}
+          </UBadge>
         </div>
       </template>
       <template #evolve-description>
@@ -179,7 +215,10 @@ const fixFlow = [
     >
       <template #header>
         <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-          <UIcon name="i-lucide-brain" class="size-4" />
+          <UIcon
+            name="i-lucide-brain"
+            class="size-4"
+          />
           <span>Learning from fixes</span>
         </div>
       </template>
@@ -191,7 +230,10 @@ const fixFlow = [
             class="flex items-center gap-2"
           >
             <div class="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-              <UIcon :name="step.icon" class="size-4 text-primary" />
+              <UIcon
+                :name="step.icon"
+                class="size-4 text-primary"
+              />
               <span class="text-muted font-medium">{{ step.step }}</span>
             </div>
             <UIcon

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { AccordionItem } from '@nuxt/ui'
+
 const mainPath = [
   {
     name: '/aif-plan',
@@ -62,6 +64,11 @@ const patchStorage = {
   icon: 'i-lucide-database',
   desc: 'Learning database'
 }
+
+const mobileAccordionItems = [
+  { label: 'Main workflow', value: 'main', slot: 'main' as const, icon: 'i-lucide-route' },
+  { label: 'Error handling', value: 'fix', slot: 'fix' as const, icon: 'i-lucide-bug' }
+] satisfies AccordionItem[]
 </script>
 
 <template>
@@ -71,8 +78,13 @@ const patchStorage = {
       <!-- Left column: Main workflow -->
       <div class="space-y-4">
         <div class="flex items-center gap-2 mb-6">
-          <UIcon name="i-lucide-route" class="size-5 text-primary" />
-          <h3 class="text-lg font-semibold">Main workflow</h3>
+          <UIcon
+            name="i-lucide-route"
+            class="size-5 text-primary"
+          />
+          <h3 class="text-lg font-semibold">
+            Main workflow
+          </h3>
         </div>
 
         <div
@@ -89,7 +101,11 @@ const patchStorage = {
           >
             <template #header>
               <div class="flex items-center gap-3">
-                <UIcon :name="step.icon" class="size-5" :class="`text-${step.color}`" />
+                <UIcon
+                  :name="step.icon"
+                  class="size-5"
+                  :class="`text-${step.color}`"
+                />
                 <div class="flex items-center gap-2">
                   <code class="text-sm font-mono">{{ step.name }}</code>
                   <UBadge
@@ -106,7 +122,10 @@ const patchStorage = {
           </UPageCard>
 
           <!-- Arrow down -->
-          <div v-if="idx < mainPath.length - 1" class="flex justify-center">
+          <div
+            v-if="idx < mainPath.length - 1"
+            class="flex justify-center"
+          >
             <UIcon
               name="i-lucide-arrow-down"
               class="size-5 text-muted"
@@ -119,13 +138,19 @@ const patchStorage = {
       <div class="hidden lg:flex flex-col justify-center items-center space-y-32 pt-20">
         <!-- Arrow from implement to fix (on error) -->
         <div class="flex flex-col items-center gap-2">
-          <UIcon name="i-lucide-arrow-right" class="size-5 text-amber-500" />
+          <UIcon
+            name="i-lucide-arrow-right"
+            class="size-5 text-amber-500"
+          />
           <span class="text-xs text-muted rotate-0 whitespace-nowrap">on error</span>
         </div>
 
         <!-- Arrow from patch storage back to implement -->
         <div class="flex flex-col items-center gap-2">
-          <UIcon name="i-lucide-arrow-left" class="size-5 text-primary" />
+          <UIcon
+            name="i-lucide-arrow-left"
+            class="size-5 text-primary"
+          />
           <span class="text-xs text-muted whitespace-nowrap">reads</span>
         </div>
       </div>
@@ -133,8 +158,13 @@ const patchStorage = {
       <!-- Right column: Fix path + Patch storage -->
       <div class="space-y-4">
         <div class="flex items-center gap-2 mb-6">
-          <UIcon name="i-lucide-bug" class="size-5 text-amber-500" />
-          <h3 class="text-lg font-semibold">Error handling</h3>
+          <UIcon
+            name="i-lucide-bug"
+            class="size-5 text-amber-500"
+          />
+          <h3 class="text-lg font-semibold">
+            Error handling
+          </h3>
         </div>
 
         <!-- Fix path -->
@@ -150,13 +180,20 @@ const patchStorage = {
           >
             <template #header>
               <div class="flex items-center gap-3">
-                <UIcon :name="step.icon" class="size-5" :class="`text-${step.color}`" />
+                <UIcon
+                  :name="step.icon"
+                  class="size-5"
+                  :class="`text-${step.color}`"
+                />
                 <code class="text-sm font-mono">{{ step.name }}</code>
               </div>
             </template>
           </UPageCard>
 
-          <div v-if="idx < fixPath.length - 1" class="flex justify-center">
+          <div
+            v-if="idx < fixPath.length - 1"
+            class="flex justify-center"
+          >
             <UIcon
               name="i-lucide-arrow-down"
               class="size-5 text-muted"
@@ -166,7 +203,10 @@ const patchStorage = {
 
         <!-- Patch storage -->
         <div class="flex justify-center mt-4">
-          <UIcon name="i-lucide-arrow-down" class="size-5 text-muted" />
+          <UIcon
+            name="i-lucide-arrow-down"
+            class="size-5 text-muted"
+          />
         </div>
 
         <UAlert
@@ -179,7 +219,10 @@ const patchStorage = {
 
         <!-- Loop back indicator -->
         <div class="flex items-center gap-2 pt-4 text-sm text-muted">
-          <UIcon name="i-lucide-repeat" class="size-4" />
+          <UIcon
+            name="i-lucide-repeat"
+            class="size-4"
+          />
           <span>Patches improve future runs</span>
         </div>
       </div>
@@ -196,10 +239,8 @@ const patchStorage = {
       />
 
       <UAccordion
-        :items="[
-          { label: 'Main workflow', value: 'main', icon: 'i-lucide-route', defaultOpen: true },
-          { label: 'Error handling', value: 'fix', icon: 'i-lucide-bug' }
-        ]"
+        :items="mobileAccordionItems"
+        default-value="main"
       >
         <template #main>
           <div class="space-y-3 pt-4">
@@ -208,10 +249,16 @@ const patchStorage = {
               :key="step.name"
               class="flex items-start gap-3 p-3 rounded-lg border border-neutral-200 dark:border-neutral-800"
             >
-              <UIcon :name="step.icon" class="size-5 flex-shrink-0 mt-0.5" :class="`text-${step.color}`" />
+              <UIcon
+                :name="step.icon"
+                class="size-5 flex-shrink-0 mt-0.5"
+                :class="`text-${step.color}`"
+              />
               <div>
                 <code class="text-sm font-mono text-primary">{{ step.name }}</code>
-                <p class="text-xs text-muted mt-1">{{ step.desc }}</p>
+                <p class="text-xs text-muted mt-1">
+                  {{ step.desc }}
+                </p>
               </div>
             </div>
           </div>
@@ -224,10 +271,15 @@ const patchStorage = {
               :key="step.name"
               class="flex items-start gap-3 p-3 rounded-lg border border-amber-200 dark:border-amber-800/50"
             >
-              <UIcon :name="step.icon" class="size-5 flex-shrink-0 mt-0.5 text-amber-500" />
+              <UIcon
+                :name="step.icon"
+                class="size-5 flex-shrink-0 mt-0.5 text-amber-500"
+              />
               <div>
                 <code class="text-sm font-mono text-amber-600 dark:text-amber-400">{{ step.name }}</code>
-                <p class="text-xs text-muted mt-1">{{ step.desc }}</p>
+                <p class="text-xs text-muted mt-1">
+                  {{ step.desc }}
+                </p>
               </div>
             </div>
 

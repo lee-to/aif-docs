@@ -60,7 +60,12 @@ const resultChecks = [
 
     <template #scan-description>
       <ul class="list-disc ps-5 text-sm text-muted space-y-2">
-        <li v-for="check in scanChecks" :key="check">{{ check }}</li>
+        <li
+          v-for="check in scanChecks"
+          :key="check"
+        >
+          {{ check }}
+        </li>
       </ul>
     </template>
 
@@ -75,7 +80,12 @@ const resultChecks = [
 
     <template #review-description>
       <ul class="list-disc ps-5 text-sm text-muted space-y-2">
-        <li v-for="check in reviewChecks" :key="check">{{ check }}</li>
+        <li
+          v-for="check in reviewChecks"
+          :key="check"
+        >
+          {{ check }}
+        </li>
       </ul>
     </template>
 
@@ -90,7 +100,12 @@ const resultChecks = [
 
     <template #result-description>
       <ul class="list-disc ps-5 text-sm text-muted space-y-2">
-        <li v-for="check in resultChecks" :key="check">{{ check }}</li>
+        <li
+          v-for="check in resultChecks"
+          :key="check"
+        >
+          {{ check }}
+        </li>
       </ul>
     </template>
   </UTimeline>

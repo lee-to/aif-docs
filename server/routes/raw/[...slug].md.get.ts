@@ -18,7 +18,10 @@ export default eventHandler(async (event) => {
 
   // Add title and description to the top of the page if missing
   if (page.body.value[0]?.[0] !== 'h1') {
-    page.body.value.unshift(['blockquote', {}, page.description])
+    if (page.description) {
+      page.body.value.unshift(['blockquote', {}, page.description])
+    }
+
     page.body.value.unshift(['h1', {}, page.title])
   }
 

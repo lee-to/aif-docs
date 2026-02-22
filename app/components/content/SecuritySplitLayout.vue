@@ -32,13 +32,21 @@ const resultChecks = [
     >
       <template #header>
         <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-          <UIcon name="i-lucide-shield-check" class="size-4" />
+          <UIcon
+            name="i-lucide-shield-check"
+            class="size-4"
+          />
           <span>Level 1 · Automated scanner</span>
         </div>
       </template>
       <template #body>
         <ul class="list-disc space-y-1 ps-5 text-sm text-muted">
-          <li v-for="item in level1Checks" :key="item">{{ item }}</li>
+          <li
+            v-for="item in level1Checks"
+            :key="item"
+          >
+            {{ item }}
+          </li>
         </ul>
       </template>
     </UPageCard>
@@ -50,13 +58,21 @@ const resultChecks = [
     >
       <template #header>
         <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-          <UIcon name="i-lucide-search" class="size-4" />
+          <UIcon
+            name="i-lucide-search"
+            class="size-4"
+          />
           <span>Level 2 · Semantic review</span>
         </div>
       </template>
       <template #body>
         <ul class="list-disc space-y-1 ps-5 text-sm text-muted">
-          <li v-for="item in level2Checks" :key="item">{{ item }}</li>
+          <li
+            v-for="item in level2Checks"
+            :key="item"
+          >
+            {{ item }}
+          </li>
         </ul>
       </template>
     </UPageCard>
@@ -68,13 +84,21 @@ const resultChecks = [
     >
       <template #header>
         <div class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-primary">
-          <UIcon name="i-lucide-badge-check" class="size-4" />
+          <UIcon
+            name="i-lucide-badge-check"
+            class="size-4"
+          />
           <span>Result · Safe to use</span>
         </div>
       </template>
       <template #body>
         <ul class="list-disc space-y-1 ps-5 text-sm text-muted">
-          <li v-for="item in resultChecks" :key="item">{{ item }}</li>
+          <li
+            v-for="item in resultChecks"
+            :key="item"
+          >
+            {{ item }}
+          </li>
         </ul>
       </template>
     </UPageCard>

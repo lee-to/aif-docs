@@ -56,7 +56,10 @@ const { header } = useAppConfig()
         class="lg:hidden"
       />
 
-      <UTooltip text="Changelog" :delay-duration="0">
+      <UTooltip
+        text="Changelog"
+        :delay-duration="0"
+      >
         <UButton
           icon="i-lucide-list-todo"
           color="neutral"

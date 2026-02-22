@@ -1,12 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  app: {
-    head: {
-      link: [
-        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
-      ]
-    }
-  },
 
   modules: [
     '@nuxt/eslint',
@@ -22,6 +15,13 @@ export default defineNuxtConfig({
   devtools: {
     enabled: false,
     componentInspector: false
+  },
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+      ]
+    }
   },
 
   // devServer: {
