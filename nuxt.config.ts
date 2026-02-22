@@ -106,5 +106,15 @@ export default defineNuxtConfig({
 
   mcp: {
     name: 'Docs template'
+  },
+
+  studio: {
+    route: '/_studio',
+    repository: {
+      provider: 'github',
+      owner: process.env.STUDIO_REPOSITORY_OWNER || 'lee-to',
+      repo: process.env.STUDIO_REPOSITORY_REPO || 'aif-docs',
+      branch: process.env.STUDIO_REPOSITORY_BRANCH || 'main'
+    }
   }
 })

@@ -15,7 +15,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Checkout
@@ -54,10 +54,13 @@ jobs:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_START_CMD: ${{ secrets.DEPLOY_START_CMD }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          STUDIO_GITHUB_CLIENT_ID: ${{ secrets.STUDIO_GITHUB_CLIENT_ID }}
+          STUDIO_GITHUB_CLIENT_SECRET: ${{ secrets.STUDIO_GITHUB_CLIENT_SECRET }}
         run: |
           missing=0
-          for key in DEPLOY_HOST DEPLOY_PATH DEPLOY_USER SSH_PRIVATE_KEY; do
+          for key in DEPLOY_HOST DEPLOY_PATH DEPLOY_USER DEPLOY_START_CMD SSH_PRIVATE_KEY STUDIO_GITHUB_CLIENT_ID STUDIO_GITHUB_CLIENT_SECRET; do
             if [ -z "${!key}" ]; then
               echo "Missing required secret: ${key}" >&2
               missing=1
@@ -71,14 +74,51 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Generate static site
-        run: bunx nuxi generate
+      - name: Build SSR output
+        run: bun run build
 
-      - name: Verify generated output
+      - name: Verify SSR output
         shell: bash
         run: |
-          test -d dist
-          test -f dist/index.html
+          test -d .output
+          test -f .output/server/index.mjs
+
+      - name: Compute release id
+        id: release
+        shell: bash
+        run: |
+          echo "id=$(date +%Y%m%d%H%M%S)-${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare release artifact
+        shell: bash
+        run: |
+          mkdir -p .deploy-artifact
+          cp -a .output .deploy-artifact/.output
+          cp package.json .deploy-artifact/package.json
+          cp bun.lock .deploy-artifact/bun.lock
+
+      - name: Prepare runtime env file
+        shell: bash
+        env:
+          NUXT_PUBLIC_SITE_URL: ${{ secrets.NUXT_PUBLIC_SITE_URL }}
+          STUDIO_GITHUB_CLIENT_ID: ${{ secrets.STUDIO_GITHUB_CLIENT_ID }}
+          STUDIO_GITHUB_CLIENT_SECRET: ${{ secrets.STUDIO_GITHUB_CLIENT_SECRET }}
+          STUDIO_GITHUB_REDIRECT_URL: ${{ secrets.STUDIO_GITHUB_REDIRECT_URL }}
+          STUDIO_GITHUB_MODERATORS: ${{ secrets.STUDIO_GITHUB_MODERATORS }}
+          STUDIO_REPOSITORY_OWNER: ${{ secrets.STUDIO_REPOSITORY_OWNER }}
+          STUDIO_REPOSITORY_REPO: ${{ secrets.STUDIO_REPOSITORY_REPO }}
+          STUDIO_REPOSITORY_BRANCH: ${{ secrets.STUDIO_REPOSITORY_BRANCH }}
+        run: |
+          {
+            [ -n "${NUXT_PUBLIC_SITE_URL}" ] && echo "NUXT_PUBLIC_SITE_URL=${NUXT_PUBLIC_SITE_URL}"
+            echo "STUDIO_GITHUB_CLIENT_ID=${STUDIO_GITHUB_CLIENT_ID}"
+            echo "STUDIO_GITHUB_CLIENT_SECRET=${STUDIO_GITHUB_CLIENT_SECRET}"
+            [ -n "${STUDIO_GITHUB_REDIRECT_URL}" ] && echo "STUDIO_GITHUB_REDIRECT_URL=${STUDIO_GITHUB_REDIRECT_URL}"
+            [ -n "${STUDIO_GITHUB_MODERATORS}" ] && echo "STUDIO_GITHUB_MODERATORS=${STUDIO_GITHUB_MODERATORS}"
+            [ -n "${STUDIO_REPOSITORY_OWNER}" ] && echo "STUDIO_REPOSITORY_OWNER=${STUDIO_REPOSITORY_OWNER}"
+            [ -n "${STUDIO_REPOSITORY_REPO}" ] && echo "STUDIO_REPOSITORY_REPO=${STUDIO_REPOSITORY_REPO}"
+            [ -n "${STUDIO_REPOSITORY_BRANCH}" ] && echo "STUDIO_REPOSITORY_BRANCH=${STUDIO_REPOSITORY_BRANCH}"
+          } > .deploy-runtime.env
 
       - name: Prepare SSH
         shell: bash
@@ -91,12 +131,69 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
 
-      - name: Sync dist to server
+      - name: Upload release to server
         shell: bash
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          RELEASE_ID: ${{ steps.release.outputs.id }}
         run: |
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${DEPLOY_PATH}'"
-          rsync -az --delete dist/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/"
+          echo "Uploading release ${RELEASE_ID}"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${DEPLOY_PATH}/releases/${RELEASE_ID}' '${DEPLOY_PATH}/shared'"
+          rsync -az .deploy-artifact/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/releases/${RELEASE_ID}/"
+          rsync -az .deploy-runtime.env "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/releases/${RELEASE_ID}/.env"
+
+      - name: Activate release and restart service
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_START_CMD: ${{ secrets.DEPLOY_START_CMD }}
+          RELEASE_ID: ${{ steps.release.outputs.id }}
+        run: |
+          DEPLOY_START_CMD_B64="$(printf '%s' "${DEPLOY_START_CMD}" | base64 -w0)"
+          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" \
+            "DEPLOY_PATH='${DEPLOY_PATH}' RELEASE_ID='${RELEASE_ID}' DEPLOY_START_CMD_B64='${DEPLOY_START_CMD_B64}' bash -s" <<'EOF'
+          set -euo pipefail
+
+          export BUN_INSTALL="$HOME/.bun"
+          export PATH="$BUN_INSTALL/bin:$PATH"
+
+          if ! command -v bun >/dev/null 2>&1; then
+            curl -fsSL https://bun.sh/install | bash
+            export PATH="$HOME/.bun/bin:$PATH"
+          fi
+
+          RELEASE_DIR="${DEPLOY_PATH}/releases/${RELEASE_ID}"
+          CURRENT_LINK="${DEPLOY_PATH}/current"
+
+          cd "${RELEASE_DIR}"
+          bun install --production --frozen-lockfile
+
+          ln -sfn "${RELEASE_DIR}" "${CURRENT_LINK}"
+
+          DEPLOY_START_CMD="$(printf '%s' "${DEPLOY_START_CMD_B64}" | base64 -d)"
+          cd "${CURRENT_LINK}"
+          eval "${DEPLOY_START_CMD}"
+          EOF
+
+      - name: Healthcheck
+        if: ${{ secrets.DEPLOY_HEALTHCHECK_URL != '' }}
+        shell: bash
+        env:
+          DEPLOY_HEALTHCHECK_URL: ${{ secrets.DEPLOY_HEALTHCHECK_URL }}
+        run: |
+          for attempt in $(seq 1 20); do
+            if curl -fsS "${DEPLOY_HEALTHCHECK_URL}" >/dev/null; then
+              echo "Healthcheck passed on attempt ${attempt}"
+              exit 0
+            fi
+
+            echo "Healthcheck failed on attempt ${attempt}, retrying..."
+            sleep 3
+          done
+
+          echo "Healthcheck failed after all retries" >&2
+          exit 1
