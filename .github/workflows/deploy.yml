@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: ["CI"]
     types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -15,17 +16,27 @@ permissions:
 
 jobs:
   deploy:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
       NODE_OPTIONS: --max-old-space-size=4096
 
     steps:
+      - name: Resolve deploy ref
+        id: deploy-ref
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            echo "sha=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "sha=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ steps.deploy-ref.outputs.sha }}
 
       - name: Check Bun availability
         id: bun-check
@@ -93,8 +104,8 @@ jobs:
         id: release
         shell: bash
         run: |
-          DEPLOY_SHA="${{ github.event.workflow_run.head_sha || github.sha }}"
-          echo "id=$(date +%Y%m%d%H%M%S)-${DEPLOY_SHA::7}" >> "$GITHUB_OUTPUT"
+          DEPLOY_SHA="${{ steps.deploy-ref.outputs.sha }}"
+          echo "id=$(date +%Y%m%d%H%M%S)-${DEPLOY_SHA:0:7}" >> "$GITHUB_OUTPUT"
 
       - name: Prepare release artifact
         shell: bash
