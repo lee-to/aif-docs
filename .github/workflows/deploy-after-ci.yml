@@ -198,11 +198,15 @@ jobs:
           EOF
 
       - name: Healthcheck
-        if: ${{ secrets.DEPLOY_HEALTHCHECK_URL != '' }}
         shell: bash
         env:
           DEPLOY_HEALTHCHECK_URL: ${{ secrets.DEPLOY_HEALTHCHECK_URL }}
         run: |
+          if [ -z "${DEPLOY_HEALTHCHECK_URL}" ]; then
+            echo "Skipping healthcheck: DEPLOY_HEALTHCHECK_URL is not set"
+            exit 0
+          fi
+
           for attempt in $(seq 1 20); do
             if curl -fsS "${DEPLOY_HEALTHCHECK_URL}" >/dev/null; then
               echo "Healthcheck passed on attempt ${attempt}"
