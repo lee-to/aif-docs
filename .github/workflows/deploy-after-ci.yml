@@ -136,6 +136,7 @@ jobs:
             [ -n "${STUDIO_REPOSITORY_OWNER}" ] && echo "STUDIO_REPOSITORY_OWNER=${STUDIO_REPOSITORY_OWNER}"
             [ -n "${STUDIO_REPOSITORY_REPO}" ] && echo "STUDIO_REPOSITORY_REPO=${STUDIO_REPOSITORY_REPO}"
             [ -n "${STUDIO_REPOSITORY_BRANCH}" ] && echo "STUDIO_REPOSITORY_BRANCH=${STUDIO_REPOSITORY_BRANCH}"
+            true
           } > .deploy-runtime.env
 
       - name: Prepare SSH
