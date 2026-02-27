@@ -150,6 +150,15 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "${DEPLOY_HOST}" >> ~/.ssh/known_hosts
 
+      - name: Verify SSH access
+        shell: bash
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+        run: |
+          ssh -o BatchMode=yes -o PasswordAuthentication=no -o IdentitiesOnly=yes \
+            "${DEPLOY_USER}@${DEPLOY_HOST}" "echo SSH_OK user=$(whoami) host=$(hostname)"
+
       - name: Upload release to server
         shell: bash
         env:
@@ -159,9 +168,10 @@ jobs:
           RELEASE_ID: ${{ steps.release.outputs.id }}
         run: |
           echo "Uploading release ${RELEASE_ID}"
-          ssh "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${DEPLOY_PATH}/releases/${RELEASE_ID}' '${DEPLOY_PATH}/shared'"
-          rsync -az .deploy-artifact/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/releases/${RELEASE_ID}/"
-          rsync -az .deploy-runtime.env "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/releases/${RELEASE_ID}/.env"
+          SSH_OPTS="-o BatchMode=yes -o PasswordAuthentication=no -o IdentitiesOnly=yes"
+          ssh ${SSH_OPTS} "${DEPLOY_USER}@${DEPLOY_HOST}" "mkdir -p '${DEPLOY_PATH}/releases/${RELEASE_ID}' '${DEPLOY_PATH}/shared'"
+          rsync -az -e "ssh ${SSH_OPTS}" .deploy-artifact/ "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/releases/${RELEASE_ID}/"
+          rsync -az -e "ssh ${SSH_OPTS}" .deploy-runtime.env "${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PATH}/releases/${RELEASE_ID}/.env"
 
       - name: Activate release and restart service
         shell: bash
