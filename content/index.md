@@ -15,7 +15,7 @@ orientation: horizontal
 Stop configuring. Start building.
 
 #description
-AI Factory sets up the right context, prompts, and workflows for your AI agent so you can ship quality code faster.
+AI Factory handles context, prompts, skills, and workflows so your AI agent can focus on shipping quality code.
 
 #links
   :::u-button
@@ -81,7 +81,7 @@ Everything you need to go from idea to reviewed, production-ready code with pred
   Zero configuration
 
   #description
-  Detects your stack and configures skills and integrations automatically.
+  Installs relevant skills, configures integrations, and bootstraps the AI context for your project.
   :::
 
   :::u-page-feature
@@ -92,7 +92,7 @@ Everything you need to go from idea to reviewed, production-ready code with pred
   Best practices built in
 
   #description
-  Logging, commits, code review, and safety checks are part of the default flow.
+  Logging, commits, review, docs checkpoints, and safety checks are part of the default flow.
   :::
 
   :::u-page-feature
@@ -103,7 +103,7 @@ Everything you need to go from idea to reviewed, production-ready code with pred
   Spec-driven workflow
 
   #description
-  Plan first, then implement. Predictable, resumable, and reviewable.
+  Explore, verify, plan, implement, and evolve with predictable artifacts instead of ad-hoc prompts.
   :::
 
   :::u-page-feature
@@ -114,7 +114,7 @@ Everything you need to go from idea to reviewed, production-ready code with pred
   Skills ecosystem
 
   #description
-  Use community skills from skills.sh or generate your own.
+  Use community skills from skills.sh, generate your own, or attach project-specific references.
   :::
 
   :::u-page-feature
@@ -122,10 +122,10 @@ Everything you need to go from idea to reviewed, production-ready code with pred
   icon: i-lucide-wrench
   ---
   #title
-  Works with your stack
+  Stack agnostic
 
   #description
-  Next.js, Laravel, Django, Express, and more.
+  Works with any language, framework, or platform instead of assuming one happy-path stack.
   :::
 
   :::u-page-feature
@@ -136,7 +136,7 @@ Everything you need to go from idea to reviewed, production-ready code with pred
   Multi-agent support
 
   #description
-  Claude Code, Cursor, Windsurf, Roo Code, and many others.
+  Claude Code, Cursor, Windsurf, Roo Code, Codex CLI, GitHub Copilot, Qwen Code, and more.
   :::
 ::
 
@@ -152,25 +152,25 @@ description: A simple workflow that scales from small fixes to multi-week featur
   icon: i-lucide-terminal
   ---
   #description
-  Run <span class="inline-code">ai-factory init</span> once to set up context and integrations.
+  Run <span class="inline-code">ai-factory init</span> once to set up context, skills, and MCP integrations.
   :::
 
   :::u-page-card
   ---
-  title: Plan
-  icon: i-lucide-scroll-text
+  title: Explore
+  icon: i-lucide-search
   ---
   #description
-  Use <span class="inline-code">/aif-plan</span> to create a step-by-step plan that is easy to track.
+  Use <span class="inline-code">/aif-explore</span> or <span class="inline-code">/aif-grounded</span> when you need discovery or certainty before planning.
   :::
 
   :::u-page-card
   ---
-  title: Implement
+  title: Plan and build
   icon: i-lucide-hammer
   ---
   #description
-  Execute tasks with <span class="inline-code">/aif-implement</span>, then review and iterate.
+  Turn direction into a plan with <span class="inline-code">/aif-plan</span>, then execute with <span class="inline-code">/aif-implement</span>.
   :::
 ::
 ::
@@ -191,7 +191,7 @@ AI Factory works across the major AI coding agents and CLIs.
   spotlight: true
   to: /getting-started#supported-agents
   ---
-  Structured planning and implementation flow.
+  Structured planning, implementation, and bundled agent files.
   :::
 
   :::u-page-card
@@ -231,7 +231,7 @@ AI Factory works across the major AI coding agents and CLIs.
   spotlight: true
   to: /getting-started#supported-agents
   ---
-  Lightweight agentic flows.
+  Lightweight agentic flows with workflows support.
   :::
 
   :::u-page-card
@@ -241,7 +241,7 @@ AI Factory works across the major AI coding agents and CLIs.
   spotlight: true
   to: /getting-started#supported-agents
   ---
-  Experiment-friendly, agent-first UX.
+  Agent-first workflows with skills and workflow files.
   :::
 
   :::u-page-card
@@ -256,22 +256,12 @@ AI Factory works across the major AI coding agents and CLIs.
 
   :::u-page-card
   ---
-  title: Warp
-  icon: i-simple-icons-warp
+  title: GitHub Copilot
+  icon: i-simple-icons-github
   spotlight: true
   to: /getting-started#supported-agents
   ---
-  Terminal-native AI assistant.
-  :::
-
-  :::u-page-card
-  ---
-  title: Zencoder
-  icon: i-simple-icons-jetbrains
-  spotlight: true
-  to: /getting-started#supported-agents
-  ---
-  JetBrains-focused automation.
+  Skills installed into `.github/` with MCP support.
   :::
 
   :::u-page-card
@@ -281,47 +271,17 @@ AI Factory works across the major AI coding agents and CLIs.
   spotlight: true
   to: /getting-started#supported-agents
   ---
-  CLI-first agent workflows.
+  Terminal-native workflows with `.codex/skills/`.
   :::
 
   :::u-page-card
   ---
-  title: GitHub Copilot
-  icon: i-simple-icons-github
+  title: Qwen Code
+  icon: i-lucide-bot
   spotlight: true
   to: /getting-started#supported-agents
   ---
-  Embedded pair-programming experience.
-  :::
-
-  :::u-page-card
-  ---
-  title: Gemini CLI
-  icon: i-simple-icons-google
-  spotlight: true
-  to: /getting-started#supported-agents
-  ---
-  Google’s CLI agent.
-  :::
-
-  :::u-page-card
-  ---
-  title: Junie
-  icon: i-simple-icons-jetbrains
-  spotlight: true
-  to: /getting-started#supported-agents
-  ---
-  JetBrains agent.
-  :::
-
-  :::u-page-card
-  ---
-  title: Any agent
-  icon: i-lucide-stars
-  spotlight: true
-  to: /getting-started#supported-agents
-  ---
-  Bring your own as long as it supports skills.
+  Additional runtime with MCP auto-configuration support.
   :::
 ::
 ::
