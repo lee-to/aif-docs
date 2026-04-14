@@ -22,14 +22,8 @@ export default defineNuxtConfig({
     buildAssetsDir: '/_nuxt/',
     head: {
       link: [
-        { rel: 'icon', type: 'image/svg+xml', href: 'favicon.svg' }
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
       ]
-    }
-  },
-
-  runtimeConfig: {
-    public: {
-      siteUrl: ''
     }
   },
 
@@ -42,6 +36,12 @@ export default defineNuxtConfig({
           searchDepth: 1
         }
       }
+    }
+  },
+
+  runtimeConfig: {
+    public: {
+      siteUrl: ''
     }
   },
 
