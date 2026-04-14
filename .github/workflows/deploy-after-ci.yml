@@ -109,11 +109,9 @@ jobs:
 
       - name: Prepare release artifact
         shell: bash
-        run: |
-          mkdir -p .deploy-artifact
+        run: |                                                                                                                                                            
+          mkdir -p .deploy-artifact                                                                                                                                       
           cp -a .output .deploy-artifact/.output
-          cp package.json .deploy-artifact/package.json
-          cp bun.lock .deploy-artifact/bun.lock
 
       - name: Prepare runtime env file
         shell: bash
@@ -186,26 +184,17 @@ jobs:
           ssh "${DEPLOY_USER}@${DEPLOY_HOST}" \
             "DEPLOY_PATH='${DEPLOY_PATH}' RELEASE_ID='${RELEASE_ID}' DEPLOY_START_CMD_B64='${DEPLOY_START_CMD_B64}' bash -s" <<'EOF'
           set -euo pipefail
-
-          export BUN_INSTALL="$HOME/.bun"
-          export PATH="$BUN_INSTALL/bin:$PATH"
-
-          if ! command -v bun >/dev/null 2>&1; then
-            curl -fsSL https://bun.sh/install | bash
-            export PATH="$HOME/.bun/bin:$PATH"
-          fi
-
+    
           RELEASE_DIR="${DEPLOY_PATH}/releases/${RELEASE_ID}"
           CURRENT_LINK="${DEPLOY_PATH}/current"
-
-          cd "${RELEASE_DIR}"
-          bun install --production --frozen-lockfile
-
+    
           ln -sfn "${RELEASE_DIR}" "${CURRENT_LINK}"
-
+    
           DEPLOY_START_CMD="$(printf '%s' "${DEPLOY_START_CMD_B64}" | base64 -d)"
           cd "${CURRENT_LINK}"
           eval "${DEPLOY_START_CMD}"
+    
+          ls -1dt "${DEPLOY_PATH}/releases/"*/ | tail -n +6 | xargs -r rm -rf
           EOF
 
       - name: Healthcheck
