@@ -16,28 +16,22 @@ export default defineNuxtConfig({
     enabled: false,
     componentInspector: false
   },
+
   app: {
+    baseURL: '/docs/',
+    buildAssetsDir: '/_nuxt/',
     head: {
       link: [
-        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+        { rel: 'icon', type: 'image/svg+xml', href: 'favicon.svg' }
       ]
     }
   },
 
-  // devServer: {
-  //   host: '0.0.0.0'
-  // },
-  //
-  // vite: {
-  //   server: {
-  //     allowedHosts: ['positively-quiet-marlin.ngrok-free.app'],
-  //     hmr: {
-  //       host: 'positively-quiet-marlin.ngrok-free.app',
-  //       protocol: 'wss',
-  //       clientPort: 443
-  //     }
-  //   }
-  // },
+  runtimeConfig: {
+    public: {
+      siteUrl: ''
+    }
+  },
 
   css: ['~/assets/css/main.css'],
 
@@ -79,7 +73,7 @@ export default defineNuxtConfig({
   icon: {},
 
   llms: {
-    domain: 'https://docs-template.nuxt.dev/',
+    domain: process.env.NUXT_PUBLIC_SITE_URL,
     title: 'Nuxt Docs Template',
     description: 'A template for building documentation with Nuxt UI and Nuxt Content.',
     full: {
