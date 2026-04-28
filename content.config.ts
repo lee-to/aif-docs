@@ -24,7 +24,7 @@ export default defineContentConfig({
     docs: defineCollection({
       type: 'page',
       source: {
-        include: '**',
+        include: '**/*.md',
         exclude: ['index.md', 'changelog/**']
       },
       schema: z.object({
